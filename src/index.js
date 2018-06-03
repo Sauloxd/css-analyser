@@ -1,71 +1,28 @@
-const fsGlob = require('glob-fs')()
 const Promise = require('bluebird')
 const uniq = require('lodash/uniq')
-const _ = require('lodash');
+const _ = require('lodash')
 const isObject = require('lodash/isObject')
 const flatten = require('lodash/flatten')
 const exec = Promise.promisify(require('child_process').exec)
 const { writeFileSync, readFileSync } = require('fs')
 const subjectPath = '/Users/saulofuruta/QultureRocks/qultureapp'
-const htmlparser = require('htmlparser2')
 
-const sass = require('node-sass');
+const sass = require('node-sass')
 const minifyCss = require('clean-css')
 const printFileSync = (params) => writeFileSync.apply(null, params.concat('utf-8'))
 
 const jsPath = `${subjectPath}/app`
 const cssPath = `${subjectPath}/app/assets/stylesheets`
 
-let classesTracker = {}
-let slimErrors = []
-
-function getAllTemplatesPaths() {
-  console.log('started')
-  const paths = fsGlob.readdirSync(`**/*.slim`, {cwd: jsPath})
-
-  // console.log(paths)
-  // writeFileSync('paths.json', JSON.stringify(paths, null, 2))
-  Promise.map(
-    paths, path =>
-      exec(`slimrb ${jsPath}/${path}`)
-        .then((stdout, stderr) => new Promise((resolve, reject) => {
-          const parser = new htmlparser.Parser({
-            onopentag: (name, attr) => {
-              if (attr.class) {
-                const cssClass = attr.class.split(' ')
-                classesTracker = cssClass.reduce((tracker, className) => {
-                  tracker[className] = uniq((tracker[className] || []).concat(`${jsPath}/${path}`))
-                  return tracker
-                }, classesTracker)
-              }
-            },
-            onerror: () => reject(),
-            onend: () => {
-              resolve()
-            }
-          })
-          parser.write(stdout)
-          parser.end()
-        }))
-        .catch(err => slimErrors.push({ path, err }))
-  )
-    .then(() => {
-      writeFileSync('result.json', JSON.stringify(classesTracker, null, 2))
-      writeFileSync('errors.json', JSON.stringify(slimErrors, null, 2))
-    })
-    .then(() => console.log('finished'))
-    .catch(err => console.log(err))
-}
-
 function buildSass() {
-  var sass = require('node-sass');
+  var sass = require('node-sass')
   sass.render({
     file: cssPath + '/application.scss',
     includePaths: [
       subjectPath + '/node_modules',
-      subjectPath + '/vendor/assets/bower_components',
-    ],
-  }, function(err, result) {
+      subjectPath + '/vendor/assets/bower_components'
+    ]
+  }, function (err, result) {
     console.log('eerr', err)
     // console.log('result: ', result.stats.includedFiles)
     printFileSync(['css-result.css', result.css])
@@ -76,8 +33,8 @@ function buildSass() {
 }
 
 const parseCSS = function (css) {
-  return parse(clean(css), /([^{};]*)([;{}])/g, css = { block: [] }), css;
-};
+  return parse(clean(css), /([^{};]*)([;{}])/g, css = { block: [] }), css
+}
 // buildSass()
 // readResult()
 // getAllTemplatesPaths()
@@ -85,32 +42,32 @@ const parseCSS = function (css) {
 
 function clean(css) {
   return css
-    .replace(/\/\*[\W\w]*?\*\//g, "") // remove comments
-    .replace(/^\s+|\s+$/g, "") // remove trailing spaces
-    .replace(/\s*([:;{}])\s*/g, "$1") // remove trailing separator spaces
-    .replace(/\};+/g, "}") // remove unnecessary separators
-    .replace(/([^:;{}])}/g, "$1;}") // add trailing separators
+    .replace(/\/\*[\W\w]*?\*\//g, '') // remove comments
+    .replace(/^\s+|\s+$/g, '') // remove trailing spaces
+    .replace(/\s*([:;{}])\s*/g, '$1') // remove trailing separator spaces
+    .replace(/\};+/g, '}') // remove unnecessary separators
+    .replace(/([^:;{}])}/g, '$1;}') // add trailing separators
 }
 
 function refine(css, isBlock) {
-  return /^@/.test(css) ? (css = css.split(" ")) && {
-    "identifier": css.shift().substr(1).toLowerCase(),
-    "parameters": css.join(" ")
-  } : (isBlock ? /:$/ : /:/).test(css) ? (css = css.split(":")) && {
-    "property": css.shift(),
-    "value": css.join(":")
-  } : css;
+  return /^@/.test(css) ? (css = css.split(' ')) && {
+    'identifier': css.shift().substr(1).toLowerCase(),
+    'parameters': css.join(' ')
+  } : (isBlock ? /:$/ : /:/).test(css) ? (css = css.split(':')) && {
+    'property': css.shift(),
+    'value': css.join(':')
+  } : css
 }
 
 function parse(css, regExp, object) {
   for (var m; (m = regExp.exec(css)) != null;) {
-    if (m[2] == "{") object.block.push(object = {
-      "selector": refine(m[1], true),
-      "block": [],
-      "parent": object
-    });
-    else if (m[2] == "}") object = object.parent;
-    else if (m[2] == ";") object.block.push(refine(m[1]));
+    if (m[2] == '{') object.block.push(object = {
+      'selector': refine(m[1], true),
+      'block': [],
+      'parent': object
+    })
+    else if (m[2] == '}') object = object.parent
+    else if (m[2] == ';') object.block.push(refine(m[1]))
   }
 }
 
@@ -123,14 +80,14 @@ function readResult() {
   // const withoutBlocks = minified.styles.replace(/\{[^\{]*\}/g, '').replace(/\{[^\{]*\}/g, '').replace(/\{[^\{]*\}/g, '').replace(/\{[^\{]*\}/g, '')
   // console.log(parseCSS(minified.styles).block.map(i => i.selector))
   // printFileSync(['css-result-without-blocks.min.css', withoutBlocks])
-  // const classes = minified.styles.match(/\.[a-z, \-, \:\:, A-Z, 0-9]*(?=[\{, \,, \., \:, \[])/g);
+  // const classes = minified.styles.match(/\.[a-z, \-, \:\:, A-Z, 0-9]*(?=[\{, \,, \., \:, \[])/g)
 
   const selectorsWithKeyframes = parseCSS(minified.styles).block.reduce((acc, obj) => {
-    if(obj.selector) return acc.concat(obj.selector);
+    if (obj.selector) return acc.concat(obj.selector)
     console.log('NO SELECTOR', obj.selector)
 
-    return acc;
-  }, []);
+    return acc
+  }, [])
 
   const selectors = selectorsWithKeyframes.filter(i => !isObject(i))
 
@@ -151,7 +108,7 @@ function readResult() {
     const pointPositions = selector.split('').map((i, index) => i === '.' ? index : false).filter(a => _.isNumber(a))
     if (pointPositions.length === 0) return acc
 
-    const temp = selector.split('.').map(i => '.' + i).slice(1).filter(i => i.length > 1);
+    const temp = selector.split('.').map(i => '.' + i).slice(1).filter(i => i.length > 1)
 
     return [...acc, ...temp]
   }, [])
@@ -164,31 +121,34 @@ function readResult() {
     ':',
     '[',
     '>',
-    ')'
+    ')',
+    '+',
+    '~',
+    '*'
   ]
   const classes2 = uniqClasses.reduce((acc, selector) => {
     const removeAfterIndex = removeAfterChar
       .map(char => selector.indexOf(char))
       .filter(i => i !== -1)
       .sort((a, b) => a - b)
-      [0];
+      [0]
 
-    if(removeAfterIndex) {
+    if (removeAfterIndex) {
       // console.log(`selector: ${selector}, i: ${removeAfterIndex}`)
       return acc.concat(selector.slice(0, removeAfterIndex))
-    };
-    return acc.concat(selector);
+    }
+    return acc.concat(selector)
   }, [])
 
   // console.log(uniq(classes2))
-  return uniq(classes2);
+  return uniq(classes2)
 }
 
 match()
 function match() {
-  var cssInSlim = JSON.parse(readFileSync('result.json', 'utf-8'));
+  var cssInSlim = JSON.parse(readFileSync('result.json', 'utf-8'))
   console.log('CSS in USE', Object.keys(cssInSlim).length)
-  var css = readResult();
+  var css = readResult()
   console.log('CSS in TOTAL', css.length)
 
   const result = _.difference(css, Object.keys(cssInSlim).map(i => '.' + i))

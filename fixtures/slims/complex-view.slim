@@ -1,0 +1,93 @@
+.qoolturestrap.qr-background
+  .container-fluid
+    .row.qr-section_spacing-bottom-md
+      .col-xs-12.col-md-3.col-md-offset-1
+        .row
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="selectedContract"
+            h2 ng-if="isSelectedContract(contract)" translate="one_page.titles.profile.your"
+            h2 ng-if="!isSelectedContract(contract)" translate="one_page.titles.profile.from"
+            qr-entity-card active="true"
+              qr-profile-summary contract="selectedContract" max-tags="4"
+              .text-center.layout-t-sm ng-if="showNoteButton()"
+                a.qr-button.qr-button_secondary.qr-button_small [
+                  target="_blank"
+                  qr-analytics="experiments.NOTES"
+                ]
+                  | Texts
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="supervisor"
+            h2 translate="one_page.titles.manager"
+            qr-entity-card [
+              activatable="canNavigateToSupervisor()"
+              ng-click="selectContract(supervisor)"
+            ]
+              qr-user-panel ng-if="selectedContract" contract="supervisor" text-ellipsis="true"
+
+          .col-xs-12 ng-if="selectedContract.hasTeams()"
+            h2 translate="one_page.titles.teams"
+            qr-entity-panel-list resources="selectedContract.teams" hide-filter="true"
+              div ng-value="$team = $parent.$resource"
+              qr-entity-card [
+                activatable="canNavigateToTeam($team)"
+                ng-click="selectTeam($team)"
+              ]
+                qr-user-panel contract="$team"
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm [
+            ng-if="shouldShowSubordinatesList()"
+          ]
+            h2 translate="one_page.titles.subordinates"
+            qr-entity-panel-list fetcher="subordinatesFetcher" search-scope="search"
+              div ng-value="$subordinate = $parent.$resource"
+                qr-entity-card [
+                  ng-if="$subordinate"
+                  activatable="canNavigateSubordinates($subordinate)"
+                  ng-click="selectContract($subordinate)"
+                ]
+                  qr-user-panel contract="$subordinate"
+
+      .col-xs-12.col-md-7
+        .row
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="welcomeMessage && isSelectedContract(contract)"
+            h2 translate="one_page.titles.welcome_message"
+            qr-collapsible [
+              html-text="welcomeMessage"
+              deregister-watcher="true"
+              custom-class="qr-card"
+            ]
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="shouldShowOkrList()"
+            one-page-okrs-list [
+              is-current-contract="isSelectedContract(contract)"
+              list-title="{{ 'one_page.titles.goals' | translateWithModel }}"
+              type="contract"
+              id="getSelectedContractId()"
+            ]
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="shouldShowFeedbackList()"
+            one-page-feedback-list [
+              list-title="'one_page.titles.feedbacks' | translateWithModel"
+              contract-id="getSelectedContractId()"
+              is-current-contract="isSelectedContract(contract)"
+            ]
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="shouldShowPraiseList()"
+            one-page-praise-list [
+              list-title="'one_page.titles.praises' | translateWithModel"
+              contract-id="getSelectedContractId()"
+            ]
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="shouldShowIdpList()"
+            one-page-idp-list [
+              contract-id="getSelectedContractId()"
+              is-current-contract="isSelectedContract(contract)"
+              list-title="'one_page.titles.idps' | translateWithModel"
+            ]
+
+          .col-xs-12.qr-section.qr-section_spacing-bottom-sm ng-if="shouldShowSurveyList()"
+            one-page-survey-list [
+              contract-id="getSelectedContractId()"
+              company-id="companyId"
+              reviewee="selectedContract"
+              list-title="'one_page.titles.surveys' | translateWithModel"
+            ]
