@@ -1,9 +1,10 @@
 import { preprocessorRetriever } from './preprocessors'
-import { uniq, merge } from 'lodash'
-const Promise = require('bluebird')
-const htmlparser = require('htmlparser2')
+import uniq from 'lodash/uniq'
+import merge from 'lodash/merge'
+import Promise from 'bluebird'
+import htmlparser from 'htmlparser2'
 
-export default function parseTemplates(userInput) {
+export function parse(userInput) {
   const { basePath, preprocessorType } = userInput
   const Preprocessor = preprocessorRetriever(preprocessorType)
 

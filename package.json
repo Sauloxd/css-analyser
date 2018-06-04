@@ -4,7 +4,7 @@
   "description": "CSS reporter that generates detailed information on where a CSS class is used within your html templates",
   "main": "src/index.js",
   "scripts": {
-    "test": "$(npm bin)/mocha --require babel-core/register \"./src/**/*.test.js*\"",
+    "test": "$(npm bin)/mocha --require babel-core/register \"./src/**/*.test.js*\" && ava",
     "start": "$(npm bin)/babel-node src/index.js"
   },
   "repository": {
@@ -18,9 +18,13 @@
   },
   "homepage": "https://github.com/Sauloxd/css-analyser#readme",
   "dependencies": {
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/register": "^7.0.0-beta.49",
+    "ava": "1.0.0-beta.5.1",
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "babel-preset-env": "2.0.0-alpha.20",
     "bluebird": "^3.5.1",
+    "bootstrap": "^4.1.1",
     "glob": "^7.1.2",
     "htmlparser2": "^3.9.2",
     "lodash": "^4.17.5",
@@ -31,5 +35,18 @@
     "chai-as-promised": "^7.1.1",
     "clean-css": "^4.1.11",
     "mocha": "^5.2.0"
+  },
+  "ava": {
+    "files": [
+      "src/**/*.test.js"
+    ],
+    "cache": true,
+    "concurrency": 5,
+    "failFast": true,
+    "failWithoutAssertions": false,
+    "compileEnhancements": false,
+    "require": [
+      "@babel/register"
+    ]
   }
 }

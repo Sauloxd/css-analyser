@@ -74,6 +74,7 @@ function parse(css, regExp, object) {
 function readResult() {
   const css = readFileSync('css-result.css', 'utf-8')
   const minified = new minifyCss().minify(css)
+  console.log(Object.keys(minified))
   printFileSync(['css-result.min.css', minified.styles])
 
   // remove this block
