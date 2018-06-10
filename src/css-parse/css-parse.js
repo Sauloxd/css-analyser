@@ -5,7 +5,7 @@ export const parse = userInput => {
   const { preprocessorType, entryPoint, includePaths } = userInput
 
   return precompileCss({ preprocessorType, entryPoint, includePaths })
-    .then(parseCss)
+    .then(({ css }) => parseCss(String(css)))
 }
 
 export const precompileCss = ({ preprocessorType, entryPoint, includePaths }) => {

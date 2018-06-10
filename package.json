@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "$(npm bin)/mocha --require babel-core/register \"./src/**/*.test.js*\" && ava",
-    "start": "$(npm bin)/babel-node src/index.js"
+    "start": "$(npm bin)/babel-node src/index.js",
+    "build": "npx babel src --out-dir lib --copy-files"
   },
   "repository": {
     "type": "git",
@@ -18,11 +19,12 @@
   },
   "homepage": "https://github.com/Sauloxd/css-analyser#readme",
   "dependencies": {
+    "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
+    "@babel/node": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49",
     "@babel/register": "^7.0.0-beta.49",
     "ava": "1.0.0-beta.5.1",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "2.0.0-alpha.20",
     "bluebird": "^3.5.1",
     "bootstrap": "^4.1.1",
     "glob": "^7.1.2",
