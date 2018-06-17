@@ -2,8 +2,12 @@
   "name": "css-analyser",
   "version": "1.0.0",
   "description": "CSS reporter that generates detailed information on where a CSS class is used within your html templates",
-  "main": "src/index.js",
+  "main": "lib/index.js",
+  "bin": {
+    "css-analyser": "./bin/cli.js"
+  },
   "scripts": {
+    "patch-release": "npm version patch && npm publish && git push --follow-tags",
     "test": "$(npm bin)/mocha --require babel-core/register \"./src/**/*.test.js*\" && ava",
     "start": "$(npm bin)/babel-node src/index.js",
     "build": "npx babel src --out-dir lib --copy-files"
@@ -27,6 +31,7 @@
     "ava": "1.0.0-beta.5.1",
     "bluebird": "^3.5.1",
     "bootstrap": "^4.1.1",
+    "commander": "^2.15.1",
     "glob": "^7.1.2",
     "htmlparser2": "^3.9.2",
     "lodash": "^4.17.5",

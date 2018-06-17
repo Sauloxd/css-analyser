@@ -1,36 +1,18 @@
+import Promise from 'bluebird'
 import difference from 'lodash/difference'
 import cssClassParse from './css-parse'
 import htmlClassParse from './html-parse'
+import { writeFileSync } from 'fs'
 
-const subjectPath = '/Users/saulofuruta/QultureRocks/qultureapp'
-const cssPath = `${subjectPath}/app/assets/stylesheets`
-const slimPath = `${subjectPath}/app`
-
-const userInput = {
-  css: {
-    preprocessorType: 'scss',
-    entryPoint: cssPath + '/application.scss',
-    includePaths: [
-      subjectPath + '/node_modules',
-      subjectPath + '/vendor/assets/bower_components'
-    ]
-  },
-  html: {
-    preprocessorType: 'slimrb',
-    basePath: slimPath
-  }
-}
-
-unusedClasses(userInput)
-
-function unusedClasses({ css, html }) {
-  Promise.all([
-    cssClassParse(css),
-    htmlClassParse(html)
-  ])
-    .then(([ css, html ]) => {
-      console.log(difference(css, Object.keys(html)))
-      console.log('finished 🕶')
+export default function diffClasses({ css, html }) {
+  return Promise.props({
+    css: cssClassParse(css),
+    html: htmlClassParse(html)
+  })
+    .then(({ css = [], html = {} }) => {
+      const classesDifference = difference(css, Object.keys(html))
+      writeFileSync('css-analyser__diff.log', JSON.stringify(classesDifference, null, 2), 'utf-8')
+      console.log('Done! 🍌')
     })
     .catch(error => console.error(error))
 }

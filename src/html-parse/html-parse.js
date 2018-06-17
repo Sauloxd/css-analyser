@@ -5,16 +5,17 @@ import Promise from 'bluebird'
 import htmlparser from 'htmlparser2'
 
 export function parse(userInput) {
-  const { basePath, preprocessorType } = userInput
+  const { basePath, glob } = userInput
+  const preprocessorType = glob.split('.').pop()
   const Preprocessor = preprocessorRetriever(preprocessorType)
 
-  return getAllTemplatesPaths(Preprocessor, basePath)
+  return getAllTemplatesPaths(Preprocessor, glob,basePath)
 }
 
-export function getAllTemplatesPaths(Preprocessor, basePath) {
+export function getAllTemplatesPaths(Preprocessor, glob, basePath) {
   const parsedClasses = {}
 
-  return (new Preprocessor({ basePath, logError: true }))
+  return (new Preprocessor({ basePath, glob, logError: true }))
     .compileAll({
       onPathCompile: parseClasses(classes => {
         merge(parsedClasses, classes)

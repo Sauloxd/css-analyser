@@ -21,12 +21,7 @@ export const parseCss = rawCss =>  flow([
   uniq
 ])(rawCss)
 
-export const concatSelectors = reduce((acc, obj) => {
-  if (obj.selector) return acc.concat(obj.selector)
-  console.log('NO SELECTOR', obj.selector)
-
-  return acc
-}, [])
+export const concatSelectors = reduce((acc, obj) => acc.concat(obj.selector || []), [])
 
 export const cleanNotObjectSelectors = filter(selector => !isObject(selector))
 
