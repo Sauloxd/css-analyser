@@ -6,21 +6,21 @@ import htmlparser from 'htmlparser2'
 
 export function parse(userInput) {
   const { basePath, glob } = userInput
-  const preprocessorType = glob.split('.').pop()
-  const Preprocessor = preprocessorRetriever(preprocessorType)
 
-  return getAllTemplatesPaths(Preprocessor, glob,basePath)
+  const Preprocessors = preprocessorRetriever(glob)
+
+  return getAllTemplatesPaths(Preprocessors, basePath)
 }
 
-export function getAllTemplatesPaths(Preprocessor, glob, basePath) {
+export function getAllTemplatesPaths(Preprocessors, basePath) {
   const parsedClasses = {}
 
-  return (new Preprocessor({ basePath, glob, logError: true }))
+  return Promise.map(Preprocessors, Preprocessor => (new Preprocessor.preprocessor({ basePath, glob: Preprocessor.glob, logError: true }))
     .compileAll({
       onPathCompile: parseClasses(classes => {
         merge(parsedClasses, classes)
       })
-    })
+    }))
     .then(() => parsedClasses)
 }
 

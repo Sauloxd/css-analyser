@@ -1,12 +1,13 @@
 import * as Slim from './slimrb'
+import * as Html from './html'
 
-const preprocessors = [Slim]
+const preprocessors = [Slim, Html]
 
-export function preprocessorRetriever(type) {
-  const preprocessor = preprocessors
-    .find(preprocessor => preprocessor.TYPE === type)
+export function preprocessorRetriever(globs) {
+  const preprocessorTypes = globs.split(',').map(glob => ({
+    glob,
+    preprocessor: preprocessors.find(p => p.TYPE === glob.split('.').pop()).default
+  }))
 
-  if (!preprocessor) throw new Error('Invalid preprocessor type! 😔 => ', type)
-
-  return preprocessor.default
+  return preprocessorTypes
 }

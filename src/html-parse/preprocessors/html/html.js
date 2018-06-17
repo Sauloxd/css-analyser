@@ -5,7 +5,7 @@ import glob from 'glob'
 const globAsync = Promise.promisify(glob)
 const execAsync = Promise.promisify(exec)
 
-export default class SlimrbPreprocessor {
+export default class HtmlPreprocessor {
   constructor({ basePath, glob, logError = true }) {
     this.glob = glob
     this.basePath = basePath
@@ -18,10 +18,10 @@ export default class SlimrbPreprocessor {
 
     return globAsync(this.glob, { cwd: this.basePath })
       .then(paths => {
-        console.log(`[SLIM] parsing ${paths.length} files`)
+        console.log(`[HTML] parsing ${paths.length} files`)
 
         return Promise.map(paths, path => {
-          return execAsync(`slimrb ${this.basePath}/${path}`)
+          return execAsync(`cat ${this.basePath}/${path}`)
             .then(rawHtml => onPathCompileRawHtml({fullPath: `${this.basePath}/${path}`, rawHtml}))
             .catch(err => this.errors && this.errors.push({ path, err }))
         }, { concurrency: 10 })

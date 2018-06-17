@@ -14,18 +14,28 @@ program
   .option('--style-includes <path> [paths...]', 'specify where sass can try to resolve from, usually node_modules libs', (val, memo) => { memo.push(val); return memo }, [])
   .option('-s, --style <file>', 'specify the input file for stylesheet')
   .option('-v, --view <blob>', 'set a blob to where the classes exists')
-  .option('--view-path <path>', 'where to apply blob to')
+  .option('--verbose <bool>', 'verbose mode')
   .option('-p, --print', 'if should print to screen')
   .action(({
     basePath = path.resolve('.'),
     styleIncludes,
     style,
-    view
-  }) =>
+    view,
+    verbose
+  }) => {
+    if (verbose) {
+      console.log({
+        basePath,
+        styleIncludes,
+        style,
+        view,
+        verbose
+      })
+    }
     diffStats({
       css: {
         entryPoint: path.resolve(basePath, style),
-        includePaths: styleIncludes.map(p => path.resolve(basePath, p)) || []
+        includePaths: [].concat(styleIncludes).map(p => path.resolve(basePath, p)) || []
       },
       html: {
         basePath: path.resolve(basePath),
@@ -33,12 +43,15 @@ program
       }
     })
       .then(() => {
-        console.log('Runned with the following inputs:')
-        console.log('[CSS] Entry point ', path.resolve(basePath, style))
-        console.log('[CSS] Included paths ', styleIncludes.map(p => path.resolve(basePath, p)) || [])
-        console.log('[HTML] Base path ', path.resolve(basePath))
-        console.log('[HTML] Glob ', view)
+        if (verbose) {
+          console.log('Runned with the following inputs:')
+          console.log('[CSS] Entry point ', path.resolve(basePath, style))
+          console.log('[CSS] Included paths ', styleIncludes.map(p => path.resolve(basePath, p)) || [])
+          console.log('[HTML] Base path ', path.resolve(basePath))
+          console.log('[HTML] Glob ', view)
+        }
       })
+  }
   ).on('--help', () => {
     console.log('\n  Examples:')
     console.log(`
@@ -47,7 +60,7 @@ program
         --style ./app/assets/stylesheets/application.scss /
         --style-includes ./node_modules /
         --style-includes ./vendor/assets/bower_components /
-        --view app/**/*.slim /
+        --view "app/**/*.slim,app/**/*.html" /
     `)
   })
 
