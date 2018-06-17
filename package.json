@@ -1,6 +1,6 @@
 {
   "name": "css-analyser",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "CSS reporter that generates detailed information on where a CSS class is used within your html templates",
   "main": "lib/index.js",
   "bin": {
