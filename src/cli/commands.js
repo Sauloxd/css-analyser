@@ -43,7 +43,7 @@ program
     console.log('\n  Examples:')
     console.log(`
     $ css-analyser diff /
-        --base-path /Users/saulofuruta/QultureRocks/qultureapp /
+        --base-path /Users/sauloxd/base-path /
         --style ./app/assets/stylesheets/application.scss /
         --style-includes ./node_modules /
         --style-includes ./vendor/assets/bower_components /
