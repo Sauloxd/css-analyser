@@ -1,7 +1,6 @@
 import test from 'ava'
 import difference from 'lodash/difference'
 import { parseClasses, parse } from './html-parse'
-import { TYPE as slimrbType } from './preprocessors/slimrb'
 
 test('should parse a correct raw HTML and return a correct cssTracker object', t => {
   const rawHtmlSubject = `
@@ -43,7 +42,7 @@ test('should eliminate same classes found in same raw HTML', t => {
 })
 
 test('should run return all classes for fixtures', t => {
-  const subjectResultKeys = parse({ basePath: `${__dirname}/../../fixtures/slims`, preprocessorType: slimrbType })
+  const subjectResultKeys = parse({ basePath: `${__dirname}/../../fixtures/slims`, glob: '**/*.slim' })
     .then(result => Object.keys(result))
 
   return subjectResultKeys.then(result => t.is(difference(result, [

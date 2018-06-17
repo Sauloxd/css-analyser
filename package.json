@@ -8,7 +8,7 @@
   },
   "scripts": {
     "patch-release": "npm version patch && npm publish && git push --follow-tags",
-    "test": "$(npm bin)/mocha --require babel-core/register \"./src/**/*.test.js*\" && ava",
+    "test": "nyc ava",
     "start": "$(npm bin)/babel-node src/index.js",
     "build": "npx babel src --out-dir lib --copy-files"
   },
@@ -30,7 +30,6 @@
     "@babel/register": "^7.0.0-beta.49",
     "ava": "1.0.0-beta.5.1",
     "bluebird": "^3.5.1",
-    "bootstrap": "^4.1.1",
     "commander": "^2.15.1",
     "glob": "^7.1.2",
     "htmlparser2": "^3.9.2",
@@ -38,10 +37,11 @@
     "node-sass": "^4.8.3"
   },
   "devDependencies": {
+    "bootstrap": "^4.1.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "clean-css": "^4.1.11",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2"
   },
   "ava": {
     "files": [

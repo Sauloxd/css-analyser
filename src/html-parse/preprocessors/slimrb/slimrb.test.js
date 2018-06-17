@@ -4,6 +4,7 @@ import Slimrb from './slimrb'
 test('Slimrb should correctly compile .slim', t => {
   const preprocessor = new Slimrb({
     basePath: `${__dirname}/../../../../fixtures/slims`,
+    glob: '**/*.slim',
     logError: false
   })
   const simpleSlimFileName = `${__dirname}/../../../../fixtures/slims/simple-view.slim`
@@ -23,6 +24,7 @@ test('Preprocessor should recursively find files', t => {
   const TOTAL_RECURSIVE_FILES_MANUALLY_COUNTED = 2
   const preprocessor = new Slimrb({
     basePath: `${__dirname}/../../../../fixtures`,
+    glob: '**/*.slim',
     logError: false
   })
 
