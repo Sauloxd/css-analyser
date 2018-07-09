@@ -5,14 +5,15 @@ import htmlClassParse from './html-parse'
 import { writeFileSync } from 'fs'
 
 export default function diffClasses({ css, html }) {
-  return Promise.props({
-    css: cssClassParse(css),
-    html: htmlClassParse(html)
-  })
-    .then(({ css = [], html = {} }) => {
-      const classesDifference = difference(css, Object.keys(html))
+  let parsedCss = [], parsedHtml = {}
+
+  return cssClassParse(css)
+    .then(cssResult => parsedCss = cssResult)
+    .then(() => htmlClassParse(html))
+    .then(htmlResult => parsedHtml = htmlResult)
+    .then(() => {
+      const classesDifference = difference(parsedCss, Object.keys(parsedHtml))
       writeFileSync('css-analyser__diff.log', JSON.stringify(classesDifference, null, 2), 'utf-8')
-      console.log('Done! 🍌')
     })
     .catch(error => console.error(error))
 }

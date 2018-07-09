@@ -34,7 +34,8 @@
     "glob": "^7.1.2",
     "htmlparser2": "^3.9.2",
     "lodash": "^4.17.5",
-    "node-sass": "^4.8.3"
+    "node-sass": "^4.8.3",
+    "ora": "^2.1.0"
   },
   "devDependencies": {
     "bootstrap": "^4.1.1",

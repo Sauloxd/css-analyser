@@ -2,6 +2,7 @@ import path from 'path'
 import program from 'commander'
 import diffStats from '../css-stats'
 import { version } from '../../package.json'
+import * as loading from '../loading'
 
 program
   .version(version)
@@ -32,6 +33,9 @@ program
         verbose
       })
     }
+
+    loading.start()
+
     diffStats({
       css: {
         entryPoint: path.resolve(basePath, style),
@@ -43,6 +47,7 @@ program
       }
     })
       .then(() => {
+        loading.succeed('Finished css analytics!')
         if (verbose) {
           console.log('Runned with the following inputs:')
           console.log('[CSS] Entry point ', path.resolve(basePath, style))
