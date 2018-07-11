@@ -1,6 +1,11 @@
 import ora from 'ora'
 
-let spinner
+let spinner = {
+  stopAndPersist: () => spinner,
+  start: () => spinner,
+  fail: () => spinner,
+  succeed: () => spinner
+}
 
 export const start = () => spinner = ora('Css analysis started').start()
 export const queueMessage = (message) => spinner.text = message
