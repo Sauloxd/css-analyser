@@ -51,5 +51,9 @@ It results in a file name `css-analyser__diff.log` with an array of all """"unus
 
 
 ## What's next?
-This a poc actually, maybe it makes sense, maybe it does not, if you are not rendering your app (jsx 🤧)
-If it someone tells me it make sense, maybe for some basic MPA apps, I'll actually work on improving it.
+This a poc actually, for many SPAs with JS adding/removing classes, I don't think it will actually be helpful.
+But for applications that are mainly HTML and CSS, i strongly believe it is helpful.
+
+What do you guys think?
+
+👾
